@@ -28,6 +28,13 @@
     <Folder Include="App_Resources\Android\drawable-ldpi">
       <Platform>Android</Platform>
     </Folder>
+    <Folder Include="kendo" />
+    <Folder Include="kendo\js" />
+    <Folder Include="styles" />
+    <Folder Include="styles\BlueOpal" />
+    <Folder Include="styles\Default" />
+    <Folder Include="styles\images" />
+    <Folder Include="styles\textures" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="App_Resources\iOS\icon.png" />
@@ -40,7 +47,7 @@
     <Resource Include="App_Resources\iOS\Icon-Small-50@2x.png" />
     <Resource Include="App_Resources\iOS\Default.png" />
     <Resource Include="App_Resources\iOS\Default@2x.png" />
-	<Resource Include="App_Resources\iOS\Default-568h@2x.png" />
+    <Resource Include="App_Resources\iOS\Default-568h@2x.png" />
     <Resource Include="App_Resources\iOS\Default-Portrait.png" />
     <Resource Include="App_Resources\iOS\Default-Landscape.png" />
     <Resource Include="App_Resources\iOS\Default-Portrait@2x.png" />
@@ -53,10 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.html" />
-    <Content Include="css\index.css" />
-    <Content Include="js\index.js" />
-    <Content Include="img\logo.png" />
-    <Content Include="img\cordova.png" />
     <Content Include="cordova.ios.js">
       <Platform>iOS</Platform>
       <TargetName>cordova.js</TargetName>
@@ -65,6 +68,58 @@
       <Platform>Android</Platform>
       <TargetName>cordova.js</TargetName>
     </Content>
+    <Content Include="kendo\js\jquery.min.js" />
+    <Content Include="kendo\js\kendo.all.min.js" />
+    <Content Include="styles\BlueOpal\editor.png" />
+    <Content Include="styles\BlueOpal\imagebrowser.png" />
+    <Content Include="styles\BlueOpal\loading-image.gif" />
+    <Content Include="styles\BlueOpal\loading.gif" />
+    <Content Include="styles\BlueOpal\slider-h.gif" />
+    <Content Include="styles\BlueOpal\slider-v.gif" />
+    <Content Include="styles\BlueOpal\sprite.png" />
+    <Content Include="styles\Default\editor.png" />
+    <Content Include="styles\Default\imagebrowser.png" />
+    <Content Include="styles\Default\loading-image.gif" />
+    <Content Include="styles\Default\loading.gif" />
+    <Content Include="styles\Default\slider-h.gif" />
+    <Content Include="styles\Default\slider-v.gif" />
+    <Content Include="styles\Default\sprite.png" />
+    <Content Include="styles\images\android-sprite.png" />
+    <Content Include="styles\images\iconmasks.svg" />
+    <Content Include="styles\images\icons.png" />
+    <Content Include="styles\images\ios-sprite.png" />
+    <Content Include="styles\images\KendoUI.ttf" />
+    <Content Include="styles\images\KendoUI.woff" />
+    <Content Include="styles\kendo.blueopal.min.css" />
+    <Content Include="styles\kendo.common.min.css" />
+    <Content Include="styles\kendo.default.min.css" />
+    <Content Include="styles\kendo.mobile.all.min.css" />
+    <Content Include="styles\textures\brushed-metal.png" />
+    <Content Include="styles\textures\dots1.png" />
+    <Content Include="styles\textures\dots10.png" />
+    <Content Include="styles\textures\dots11.png" />
+    <Content Include="styles\textures\dots12.png" />
+    <Content Include="styles\textures\dots13.png" />
+    <Content Include="styles\textures\dots2.png" />
+    <Content Include="styles\textures\dots3.png" />
+    <Content Include="styles\textures\dots4.png" />
+    <Content Include="styles\textures\dots5.png" />
+    <Content Include="styles\textures\dots6.png" />
+    <Content Include="styles\textures\dots7.png" />
+    <Content Include="styles\textures\dots8.png" />
+    <Content Include="styles\textures\dots9.png" />
+    <Content Include="styles\textures\glass-lighter.png" />
+    <Content Include="styles\textures\glass.png" />
+    <Content Include="styles\textures\highlight.png" />
+    <Content Include="styles\textures\leather1.png" />
+    <Content Include="styles\textures\leather2.png" />
+    <Content Include="styles\textures\noise.png" />
+    <Content Include="styles\textures\stripe1.png" />
+    <Content Include="styles\textures\stripe2.png" />
+    <Content Include="styles\textures\stripe3.png" />
+    <Content Include="styles\textures\stripe4.png" />
+    <Content Include="styles\textures\stripe5.png" />
+    <Content Include="styles\textures\stripe6.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Telerik\ICE\Tools\Mobile\MobileTools.targets" />
 </Project>

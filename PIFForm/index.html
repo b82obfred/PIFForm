@@ -1,42 +1,595 @@
-﻿<!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>Kendo Data Management</title>
+    <script src="kendo/js/jquery.min.js"></script>
+    <script src="kendo/js/kendo.all.min.js"></script>
+    <link href="styles/kendo.common.min.css" rel="stylesheet">
+    <link href="styles/kendo.blueopal.min.css" rel="stylesheet">
+    
+</head>
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <div id="example" class="k-content">
+            <div id="grid"/>
+            <script type="text/x-kendo-template" id="template">
+                <div class="tabstrip">
+                                                    
+                </div>
 
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
+            </script>
         </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
+
         <script type="text/javascript">
-            app.initialize();
-        </script>
-    </body>
+
+            var crudUrlPIFs = "http://74.81.211.118/m.PIFDNN/DesktopModules/WebApiPIF/API/PIF/";
+            var clientName = "";
+            var typeDepartment = "";
+            var typeCategory = "";
+
+            $(document).ready(function () {
+
+                DSPIFs = new kendo.data.DataSource({
+                    transport: {
+                        read: crudUrlPIFs + "ReadKendoPIFs",
+                        update: {
+                            url: crudUrlPIFs + "UpdateKendoPIFs/",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            type: "PUT",
+                            complete: function (jqXHR, textStatus) {
+                                console.log(textStatus, "update");
+                            },
+                        },
+                        create: {
+                            url: crudUrlPIFs + "CreateKendoPIFs/",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            type: "PUT",
+                            complete: function (jqXHR, textStatus) {
+                                console.log(textStatus, "create");
+                                //var grid = detailRow.find(".As").data("kendoGrid");
+                                //grid.dataSource.read();
+                            },
+                        },
+                        destroy: {
+                            url: crudUrlPIFs + "DestroyKendoPIFs/",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            type: "DELETE",
+                            complete: function (jqXHR, textStatus) {
+                                console.log(textStatus, "destroy");
+                            },
+                        },
+                        parameterMap: function (options, operation) {
+                            if (operation == "update" && options) {
+                                console.log(operation);
+                                for (var i = 0; i < options.models.length; i++) {
+                                    var item = options.models[i];
+                                    delete item.DetailsProjectDetails;
+                                    delete item.DetailsProjectValue;
+                                    delete item.DetailsProjectValues;
+                                    delete item.DetailsQuantity;
+                                    delete item.DetailsUnits;
+                                    delete item.DetailsQuantityUnits;
+                                    delete item.DetailsSubContracting;
+                                    delete item.DetailsSubContractorComplete;
+                                    delete item.OfficeDepositRequired;
+                                    delete item.OfficeAmount;
+                                    delete item.OfficePayee;
+                                    delete item.TimelineDateStart;
+                                    delete item.TimelineDateCompleted;
+                                    delete item.TimelineFiscalYear;
+                                    delete item.TimelineJobYear;
+                                    delete item.TimelineJobNumber;
+                                    delete item.SummarySubmittedBy;
+                                    delete item.SummaryDateSubmitted;
+                                    delete item.SummaryReceivedBy;
+                                    delete item.SummaryDateReceived;
+                                    delete item.Transactions;
+                                    delete item.DetailQuantity;
+                                    delete item.OfficePaperworkRequired;
+                                }
+
+                                
+                                console.log(kendo.stringify(options.models));
+                            }
+                            if (operation == "create" && options) {
+                                console.log(operation);
+                                console.log(kendo.stringify(options.models));
+                            }
+                            if (operation == "destroy" && options) {
+                                console.log(operation);
+                                console.log(kendo.stringify(options.models));
+                            }
+                            return kendo.stringify(options.models);
+                        }
+                    },
+                    batch: true,
+                    scrollable: {
+                        virtual: true
+                    },
+                    schema: {
+                        model: {
+                            id: "PIFId",
+                            fields: {
+                                OperationsManager: { type: "string" },
+                                ProjectManager: { type: "string" },
+                                ClientName: { type: "string" },
+                                ClientAddress: { type: "string" },
+                                ClientCity: { type: "string" },
+                                ClientProvince: { type: "string" },
+                                ClientPostal: { type: "string" },
+                                ClientFax: { type: "string" },
+                                ContactName: { type: "string" },
+                                ContactPhone: { type: "string" },
+                                ContactCell: { type: "string" },
+                                ContactEmail: { type: "string" },
+                                LocationBaseOffice: { type: "string" },
+                                LocationCity: { type: "string" },
+                                LocationProvince: { type: "string" },
+                                TypeDepartment: { type: "string" },
+                                TypeCategory: { type: "string" },
+                                TypeSubCategory: { type: "string" },
+                                TypeJobCode: { type: "string" },
+                                TypeWCB: { type: "string" },
+                                DetailsProjectDetails: { type: "string" },
+                                DetailsProjectValue: { type: "string" },
+                                DetailQuantity: { type: "number" },
+                                DetailUnits: { type: "string" },
+                                DetailsSubContracting: { type: "boolean" },
+                                DetailsSubContractorComplete: { type: "boolean" },
+                                OfficeDepositRequired: { type: "boolean" },
+                                OfficeAmount: { type: "number" },
+                                OfficePayee: { type: "string" },
+                                OfficePaperworkRequired: { type: "boolean" },
+                                TimelineDateStart: { type: "date" },
+                                TimelineDateCompleted: { type: "date" },
+                                TimelineFiscalYear: { type: "number" },
+                                TimelineJobYear: { type: "number" },
+                                TimelineJobNumber: { type: "string" },
+                                SummarySubmittedBy: { type: "string" },
+                                SummaryDateSubmitted: { type: "date" },
+                                SummaryReceivedBy: { type: "string" },
+                                SummaryDateReceived: { type: "date" }
+                            }
+                        }
+                    }
+                });
+
+                $("#grid").kendoGrid({
+                    dataSource: DSPIFs,
+                    dataBound: function (e) {
+                        this.expandRow(this.tbody.find("tr.k-master-row").first());
+                    },
+
+                    selectable: true,
+                    navigatable: true,
+                    filterable: true,
+                    pageable: false,
+                    height: 200,
+                    //toolbar: ["create", "save", "cancel"],
+                    toolbar: ["create"],
+                    columns: [
+                        { field: "OperationsManager", title: "Operations Manager", editor: operationsmanagerDropDownEditor, template: "#=OperationsManager#" },
+                        { field: "ProjectManager", title: "Project Manager", editor: projectmanagerDropDownEditor, template: "#=ProjectManager#" },
+                        { field: "ClientName", title: "Client Name", editor: clientnameDropDownEditor, template: "#=ClientName#" },
+                        { field: "ClientAddress", title: "Client Address", hidden: true },
+                        { field: "ClientCity", title: "Client City", hidden: true },
+                        { field: "ClientProvince", title: "Client Province", hidden: true },
+                        { field: "ClientPostal", title: "Client Postal", hidden: true },
+                        { field: "ClientFax", title: "Client Fax", hidden: true },
+                        { field: "ContactName", title: "Contact Name", editor: contactnameDropDownEditor, template: "#=ContactName#" },
+                        { field: "ContactPhone", title: "Contact Phone", hidden: true },
+                        { field: "ContactCell", title: "Contact Cell", hidden: true },
+                        { field: "ContactEmail", title: "Contact Email", hidden: true },
+                        { field: "LocationBaseOffice", title: "Base Office", hidden: true },
+                        { field: "LocationCity", title: "City", hidden: true },
+                        { field: "LocationProvince", title: "Province", hidden: true, editor: provinceDropDownEditor, template: "#=LocationProvince#" },
+                        { field: "TypeDepartment", title: "Type Department", hidden: true, editor: departmentDropDownEditor, template: "#=TypeDepartment#" },
+                        { field: "TypeCategory", title: "Type Category", hidden: true, editor: categoryDropDownEditor, template: "#=TypeCategory#" },
+                        { field: "TypeSubCategory", title: "Type SubCategory", hidden: true, editor: subcategoryDropDownEditor, template: "#=TypeSubCategory#" },
+                        { field: "TypeJobCode", title: "Type JobCode" },
+                        { field: "TypeWCB", title: "Type WCB", hidden: true },
+                        { field: "DetailsProjectDetails", title: "Project Details", hidden: true },
+                        { field: "DetailsProjectValue", title: "Project Value", hidden: true },
+                        { field: "DetailsQuantity", title: "Quantity", hidden: true },
+                        { field: "DetailsUnits", title: "Units", hidden: true, editor: unitsDropDownEditor, template: "#=DetailsUnits#" },
+                        { field: "DetailsSubContracting", title: "SubContracting", hidden: true },
+                        { field: "DetailsSubContractingComplete", title: "SubContracting Complete", hidden: true },
+                        { field: "OfficeDepositRequired", title: "Office Deposit Required", hidden: true },
+                        { field: "OfficeAmount", title: "Office Amount", hidden: true },
+                        { field: "OfficePayee", title: "Office Payee", hidden: true },
+                        { field: "OfficePaperworkRequired", title: "Office Paperwork Required", hidden: true },
+                        { field: "TimelineDateStart", title: "Timeline Date Start", hidden: true },
+                        { field: "TimelineDateCompleted", title: "Timeline Date Completed", hidden: true },
+                        { field: "TimelineFiscalYear", title: "Timeline Fiscal Year", hidden: true },
+                        { field: "TimelineJobYear", title: "Timeline Job Year", hidden: true },
+                        { field: "TimelineJobNumber", title: "Timeline Job Number" },
+                        { field: "SummarySubmittedBy", title: "Summary Submitted By", hidden: true },
+                        { field: "SummaryDateSubmitted", title: "Summary Date Submitted", hidden: true },
+                        { field: "SummaryReceivedBy", title: "Summary Received By", hidden: true },
+                        { field: "SummaryDateReceived", title: "Summary Date Received", hidden: true },
+
+
+
+                        { command: ["edit"], title: "&nbsp;", width: "85px" }
+                    ],
+                    editable: "popup",
+                    selectable: true,
+                    edit: function (e) {
+                        var editWindow = this.editable.element.data("kendoWindow");
+                        editWindow.wrapper.css({
+                            width: 1000,
+                            top: 5,
+                            left: 5
+                        });
+                    }
+                    //detailTemplate: kendo.template($("#template").html()),
+                    //detailInit: detailInit
+                });
+            });
+
+
+
+            function clientnameDropDownEditor(container, options) {
+                $('<input id="ClientName" style="width:800px" data-text-field="ClientName" data-value-field="ClientName" data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoComboBox({
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: "http://74.81.211.118/m.PIFDNN/DesktopModules/WebApiPIF/API/PIF/GetLookupClientName",
+                                dataType: "json"
+                            }
+                        },
+                        schema: {
+                            model: {
+                                id: "ClientId",
+                                fields: {
+                                    ClientName: { type: "string" },
+                                    ClientAddress: { type: "string" },
+                                    ClientCity: { type: "string" },
+                                    ClientProvince: { type: "string" },
+                                    ClientPostal: { type: "string" },
+                                    ClientFax: { type: "string" }
+                                }
+                            }
+                        },
+                    }),
+                    placeholder: "Select A Client",
+                    template: "<table><tr><td width='150px'>${ ClientName }</td><td width='300px'>${ ClientAddress }</td><td width='150px'>${ ClientCity }</td></tr></table>",
+                    dataTextField: "ClientName",
+                    dataValueField: "ClientName",
+                    autoBind: true,
+
+                    change: function (e) {
+                        var combobox = $("#ClientName").data("kendoComboBox");
+                        var dataItem = combobox.dataItem();
+                        //alert(dataItem.ClientAddress);
+
+                        var uid = this.element.closest("[data-role=window]").data("uid");
+                        var model = $("#grid").data("kendoGrid").dataSource.getByUid(uid);
+                        model.set("ClientAddress", "");
+                        model.set("ClientCity", "");
+                        model.set("ClientProvince", "");
+                        model.set("ClientPostal", "");
+                        model.set("ClientFax", "");
+
+                        model.set("ContactPhone", "");
+                        model.set("ContactCell", "");
+                        model.set("ContactEmail", "");
+
+                        model.set("ClientAddress", dataItem.ClientAddress);
+                        model.set("ClientCity", dataItem.ClientCity);
+                        model.set("ClientProvince", dataItem.ClientProvince);
+                        model.set("ClientPostal", dataItem.ClientPostal);
+                        model.set("ClientFax", dataItem.ClientFax);
+
+                        clientName = e.sender.value();
+                        $("#ContactName").data("kendoComboBox").refresh();
+                    }
+                });
+                $('<div/>')
+                .html("<table><tr><td width='150px'>Client Name</td><td width='300px'>Client Address</td><td width='150px'>Client City</td></tr></table>")
+                .prependTo('#ClientName-list');
+            };
+
+            function contactnameDropDownEditor(container, options) {
+                $('<input id="ContactName" style="width:350px" data-text-field="ContactName" data-value-field="ContactName" data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoComboBox({
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: "http://74.81.211.118/m.PIFDNN/DesktopModules/WebApiPIF/API/PIF/GetLookupContactName",
+                                dataType: "json",
+                                data: { ClientName: clientName }
+                            },
+                            parameterMap: function (options, operation) {
+                                console.log('ContactName:' + operation);
+                                return {
+                                    //ClientName: clientName
+                                    ClientName: $("#ClientName").val()
+                                }
+                            }
+                        },
+
+                        schema: {
+                            model: {
+                                id: "ContactId",
+                                fields: {
+                                    ClientName: { type: "string" },
+                                    ContactName: { type: "string" },
+                                    ContactPhone: { type: "string" },
+                                    ContactCell: { type: "string" },
+                                    ContactEmail: { type: "string" }
+                                }
+                            }
+                        },
+                        filter: { field: "ClientName", operator: "eq", value: clientName },
+                        serverFiltering: true
+                    }),
+                    placeholder: "Select A Contact",
+                    template: "<table><tr><td width='150px'>${ ContactName }</td><td width='150px'>${ ContactPhone }</td></tr></table>",
+                    dataTextField: "ContactName",
+                    dataValueField: "ContactName",
+                    cascadeFrom: "ClientName",
+                    autoBind: false,
+
+                    change: function (e) {
+                        var combobox = $("#ContactName").data("kendoComboBox");
+                        var dataItem = combobox.dataItem();
+
+                        //var contactPhone = $("input[name='ContactPhone']");
+                        //contactPhone.val(dataItem.ContactPhone);
+
+                        var uid = this.element.closest("[data-role=window]").data("uid");
+                        var model = $("#grid").data("kendoGrid").dataSource.getByUid(uid);
+                        model.set("ContactPhone", dataItem.ContactPhone);
+                    }
+                });
+            };
+
+            function operationsmanagerDropDownEditor(container, options) {
+                $('<input data-text-field="OperationsManager" data-value-field="OperationsManager" data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: "http://74.81.211.118/m.PIFDNN/DesktopModules/WebApiPIF/API/PIF/GetLookupOperationsManager",
+                                dataType: "json"
+                            }
+                        },
+                    }),
+                    dataTextField: "OperationsManager",
+                    dataValueField: "OperationsManager"
+                });
+            };
+
+            function projectmanagerDropDownEditor(container, options) {
+                $('<input data-text-field="ProjectManager" data-value-field="ProjectManager" data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: "http://74.81.211.118/m.PIFDNN/DesktopModules/WebApiPIF/API/PIF/GetLookupProjectManager",
+                                dataType: "json"
+                            }
+                        },
+                    }),
+                    dataTextField: "ProjectManager",
+                    dataValueField: "ProjectManager"
+                });
+            };
+
+            function baseofficeDropDownEditor(container, options) {
+                $('<input data-text-field="BaseOffice" data-value-field="BaseOffice" data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: "http://74.81.211.118/m.PIFDNN/DesktopModules/WebApiPIF/API/PIF/GetLookupBaseOffice",
+                                dataType: "json"
+                            }
+                        },
+                    }),
+                    dataTextField: "BaseOffice",
+                    dataValueField: "BaseOffice"
+                });
+            };
+
+            function provinceDropDownEditor(container, options) {
+                $('<input data-text-field="Province" data-value-field="Province" data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: "http://74.81.211.118/m.PIFDNN/DesktopModules/WebApiPIF/API/PIF/GetLookupProvince",
+                                dataType: "json"
+                            }
+                        },
+                    }),
+                    dataTextField: "Province",
+                    dataValueField: "Province"
+                });
+            };
+
+            function departmentDropDownEditor(container, options) {
+                $('<input id="TypeDepartment" style="width:300px" data-text-field="Department" data-value-field="Department" data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoComboBox({
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: "http://74.81.211.118/m.PIFDNN/DesktopModules/WebApiPIF/API/PIF/GetLookupDepartment",
+                                dataType: "json"
+                            }
+                        },
+                        schema: {
+                            model: {
+                                id: "Department",
+                                fields: {
+                                    //null
+                                }
+                            }
+                        },
+                    }),
+                    placeholder: "Select A Department",
+                    dataTextField: "Department",
+                    dataValueField: "Department",
+                    autoBind: true,
+
+                    change: function (e) {
+                        var combobox = $("#TypeDepartment").data("kendoComboBox");
+                        var dataItem = combobox.dataItem();
+
+                        var uid = this.element.closest("[data-role=window]").data("uid");
+                        var model = $("#grid").data("kendoGrid").dataSource.getByUid(uid);
+                        model.set("TypeJobCode", "");
+                        model.set("TypeWCB", "");
+
+                        typeDepartment = e.sender.value();
+                        $("#TypeCategory").data("kendoComboBox").refresh();
+                    }
+                });
+            };
+
+            function categoryDropDownEditor(container, options) {
+                $('<input id="TypeCategory"  style="width:300px" data-text-field="Category" data-value-field="Category" data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoComboBox({
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: "http://74.81.211.118/m.PIFDNN/DesktopModules/WebApiPIF/API/PIF/GetLookupCategory",
+                                dataType: "json",
+                                data: { Department: typeDepartment }
+                            },
+                            parameterMap: function (options, operation) {
+                                console.log('Category:' + operation);
+                                return {
+                                    Department: $("#TypeDepartment").val()
+                                }
+                            }
+                        },
+
+                        schema: {
+                            model: {
+                                id: "Category",
+                                fields: {
+                                    Department: { type: "string" }
+                                }
+                            }
+                        },
+                        filter: { field: "Department", operator: "eq", value: typeDepartment },
+                        serverFiltering: true
+                    }),
+                    placeholder: "Select A Category",
+                    dataTextField: "Category",
+                    dataValueField: "Category",
+                    cascadeFrom: "TypeDepartment",
+                    autoBind: false,
+
+                    change: function (e) {
+                        var combobox = $("#TypeCategory").data("kendoComboBox");
+                        var dataItem = combobox.dataItem();
+
+                        var uid = this.element.closest("[data-role=window]").data("uid");
+                        var model = $("#grid").data("kendoGrid").dataSource.getByUid(uid);
+                        model.set("TypeJobCode", "");
+                        model.set("TypeWCB", "");
+
+                        typeCategory = e.sender.value();
+                        $("#TypeSubCategory").data("kendoComboBox").refresh();
+                    }
+                });
+            };
+
+            function subcategoryDropDownEditor(container, options) {
+                $('<input id="TypeSubCategory" style="width:450px" data-text-field="SubCategory" data-value-field="SubCategory" data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoComboBox({
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: "http://74.81.211.118/m.PIFDNN/DesktopModules/WebApiPIF/API/PIF/GetLookupSubCategory",
+                                dataType: "json",
+                                data: { Department: typeDepartment, Category: typeCategory }
+                            },
+                            parameterMap: function (options, operation) {
+                                console.log('SubCategory:' + operation);
+                                return {
+                                    Department: $("#TypeDepartment").val(),
+                                    Category: $("#TypeCategory").val()
+                                }
+                            }
+                        },
+
+                        schema: {
+                            model: {
+                                id: "SubCategory",
+                                fields: {
+                                    Department: { type: "string" },
+                                    Category: { type: "string" },
+                                    JobCode: { type: "string" },
+                                    WCB: { type: "string" }
+                                }
+                            }
+                        },
+                        filter: [
+                            { field: "Department", operator: "eq", value: typeDepartment },
+                            { field: "Category", operator: "eq", value: typeCategory }
+                        ],
+                        serverFiltering: true
+                    }),
+                    placeholder: "Select A SubCategory",
+                    dataTextField: "SubCategory",
+                    dataValueField: "SubCategory",
+                    template: "<table><tr><td width='300px'>${ SubCategory }</td><td width='75px'>${ JobCode }</td><td width='75px'>${ WCB }</td></tr></table>",
+                    cascadeFrom: "TypeCategory",
+                    autoBind: false,
+
+                    change: function (e) {
+                        var combobox = $("#TypeSubCategory").data("kendoComboBox");
+                        var dataItem = combobox.dataItem();
+
+                        var uid = this.element.closest("[data-role=window]").data("uid");
+                        var model = $("#grid").data("kendoGrid").dataSource.getByUid(uid);
+                        model.set("TypeJobCode", dataItem.JobCode);
+                        model.set("TypeWCB", dataItem.WCB);
+                    }
+                });
+                $('<div/>')
+                .html("<table><tr><td width='300px'>SubCategory</td><td width='75px'>JobCode</td><td width='75px'>WCB</td></tr></table>")
+                .prependTo('#TypeSubCategory-list');
+            };
+
+            function unitsDropDownEditor(container, options) {
+                $('<input data-text-field="Units" data-value-field="Units" data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: "http://74.81.211.118/m.PIFDNN/DesktopModules/WebApiPIF/API/PIF/GetLookupUnits",
+                                dataType: "json"
+                            }
+                        },
+                    }),
+                    dataTextField: "Units",
+                    dataValueField: "Units"
+                });
+            };
+
+            </script>
+    </div>
+    </form>
+</body>       
 </html>
